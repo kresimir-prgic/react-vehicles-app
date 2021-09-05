@@ -1,0 +1,8 @@
+.vehicle-item {
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.vehicle-title {
+  margin: 0;
+}
