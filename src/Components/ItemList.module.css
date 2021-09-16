@@ -1,0 +1,8 @@
+.item-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
