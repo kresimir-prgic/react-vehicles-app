@@ -3,22 +3,19 @@ import VehicleModelService from "../../Common/VehicleModelService";
 
 class VehicleModelStore {
   isLoading = true;
-  vehicleModelData = {
-    model: []
-  };
+  vehicleModelData = [];
   status = "initial";
   searchQuery = "";
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
+    this.getVehicleModels();
     makeObservable(this, {
       isLoading: observable,
-      vehicleModelData: observable,
       status: observable,
       searchQuery: observable,
-      getVehicleModels: observable
+      vehicleModelData: observable
     })
-    this.getVehicleModels();
   }
 
   getVehicleModels = async () => {
@@ -32,6 +29,7 @@ class VehicleModelStore {
       const data = await this.vehicleModelService.get(urlParams);
       runInAction(() => {
         this.vehicleModelData = data;
+        console.log(data);
         this.isLoading = false;
       });
     } catch (error) {

@@ -1,34 +1,17 @@
-import { useState, useEffect } from "react";
+import { observer, Provider } from "mobx-react";
 
 import VehicleList from "./VehicleList";
+import VehicleModelStore from "./VehicleModelStore";
 
 function AllVehiclesPage() {
-	const [isLoading, setIsLoading] = useState(true);
-	const [loadedVehicles, setLoadedVehicles] = useState([]);
-
-	useEffect(() => {
-		// setIsLoading(true);
-		fetch("https://retoolapi.dev/SaKAaw/vehicles")
-			.then((response) => {
-				return response.json();
-			})
-			.then((data) => {
-				const vehiclesData = data;
-				// console.log(vehiclesData);
-				setIsLoading(false);
-				setLoadedVehicles(vehiclesData);
-			});
-	}, []);
-
-	if (isLoading) {
-		return <section>Loading Vehicle Models...</section>;
-	}
 	return (
+		<Provider VehicleModelStore={VehicleModelStore}>
 			<section>
 				<h1>All Vehicle Models</h1>
-				<VehicleList vehicles={loadedVehicles} />
+				<VehicleList vehicles={VehicleModelStore.vehicleModelData} />
 			</section>
+		</Provider>
 	);
 }
 
-export default AllVehiclesPage;
+export default observer(AllVehiclesPage);
