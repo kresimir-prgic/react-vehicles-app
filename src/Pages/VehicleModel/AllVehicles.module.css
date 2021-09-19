@@ -1,0 +1,16 @@
+.page-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  margin: 0;
+}
+
+.input {
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  width: 200px;
+}

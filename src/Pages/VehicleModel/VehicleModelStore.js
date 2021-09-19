@@ -1,4 +1,4 @@
-import { makeObservable, observable, runInAction } from "mobx";
+import { computed, makeObservable, observable, runInAction } from "mobx";
 import VehicleModelService from "../../Common/VehicleModelService";
 
 class VehicleModelStore {
@@ -6,6 +6,7 @@ class VehicleModelStore {
   vehicleModelData = [];
   status = "initial";
   searchQuery = "";
+  filter = "";
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
@@ -14,7 +15,9 @@ class VehicleModelStore {
       isLoading: observable,
       status: observable,
       searchQuery: observable,
-      vehicleModelData: observable
+      vehicleModelData: observable,
+      filter: observable,
+      filteredVehicleModels: computed
     })
   }
 
@@ -37,6 +40,13 @@ class VehicleModelStore {
         this.status = "error";
       })
     }
+  }
+
+  get filteredVehicleModels() {
+    var matchesFilter = new RegExp(this.filter, "i");
+    return this.vehicleModelData.filter(vehicle => {
+      return matchesFilter.test(vehicle.abrv) || matchesFilter.test(vehicle.name)
+    });
   }
 
 }

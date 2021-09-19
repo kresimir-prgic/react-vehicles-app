@@ -1,5 +1,3 @@
-import { inject } from "mobx-react";
-import { observer } from "mobx-react-lite";
 import VehicleItem from "./VehicleItem";
 
 import classes from "./VehicleList.module.css";
@@ -20,4 +18,4 @@ function VehicleList(props) {
 	);
 }
 
-export default inject("VehicleModelStore")(observer(VehicleList));
+export default VehicleList;
