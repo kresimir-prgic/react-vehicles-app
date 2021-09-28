@@ -1,31 +1,33 @@
-import { observer } from "mobx-react";
+import React, { Component } from "react";
+import { inject, observer } from "mobx-react";
 
 import VehicleList from "./VehicleList";
 import VehicleModelStore from "./VehicleModelStore";
 
 import classes from './AllVehicles.module.css';
 
-function AllVehiclesPage() {
-  const isLoading = VehicleModelStore.isLoading;
+class AllVehiclesPage extends Component {
 
-  const filterHandler = (event) => {
-    VehicleModelStore.filter = event.target.value;
-  }
+  render() {
+    if(this.props.vehicleModelStore.isLoading) {
+      return (
+        <h3>Loading...</h3>
+      )
+    }
 
-  if (isLoading) {
     return (
-      <h1>Loading...</h1>
-    )
-  }
-	return (
 			<section>
         <div className={classes['page-header']}>
           <h1>All Vehicle Models</h1>
-          <input className={classes.input} type="text" placeholder="Search..." value={VehicleModelStore.filter} onChange={filterHandler} />
+          <input className={classes.input} type="text" placeholder="Search..." value={this.props.vehicleModelStore.filter} onChange={event => this.props.vehicleModelStore.filterHandler(event)} />
         </div>
-				<VehicleList vehicles={VehicleModelStore.filteredVehicleModels} />
+				<VehicleList vehicles={this.props.vehicleModelStore.filteredVehicleModels} />
 			</section>
-	);
+	  );
+  }
+	
 }
 
-export default observer(AllVehiclesPage);
+export default inject(provider => ({
+  vehicleModelStore: new VehicleModelStore()
+}))(observer(AllVehiclesPage));

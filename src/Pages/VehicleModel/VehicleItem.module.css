@@ -6,3 +6,6 @@
 .vehicle-title {
   margin: 0;
 }
+.vehicle-title span {
+  color: #457B9D;
+}

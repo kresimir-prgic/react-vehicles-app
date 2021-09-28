@@ -1,4 +1,4 @@
-import { computed, makeObservable, observable, runInAction } from "mobx";
+import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import VehicleModelService from "../../Common/VehicleModelService";
 
 class VehicleModelStore {
@@ -10,14 +10,15 @@ class VehicleModelStore {
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
-    this.getVehicleModels();
+    runInAction(async () => await this.getVehicleModels());
     makeObservable(this, {
       isLoading: observable,
       status: observable,
       searchQuery: observable,
       vehicleModelData: observable,
       filter: observable,
-      filteredVehicleModels: computed
+      filteredVehicleModels: computed,
+      filterHandler: action,
     })
   }
 
@@ -32,7 +33,6 @@ class VehicleModelStore {
       const data = await this.vehicleModelService.get(urlParams);
       runInAction(() => {
         this.vehicleModelData = data;
-        console.log(data);
         this.isLoading = false;
       });
     } catch (error) {
@@ -49,6 +49,10 @@ class VehicleModelStore {
     });
   }
 
+  filterHandler(event) {
+    this.filter = event.target.value;
+  }
+
 }
 
-export default new VehicleModelStore();
+export default VehicleModelStore;

@@ -11,15 +11,17 @@ const routerStore = new RouterStore();
 
 function App() {
   return (
-    <Layout>
-      <Router component={BrowserRouter} routerStore={routerStore}>
-        <Switch>
-          {/* <MainNavigation /> */}
-          <Route path="/" exact component={AllVehiclesPage} />
-          <Route path="/make" exact component={VehicleMakePage} />
-        </Switch>
-      </Router>
-    </Layout>
+    <Router component={BrowserRouter} routerStore={routerStore}>
+      <div>
+        <MainNavigation />
+        <Layout>
+          <Switch>
+            <Route path="/" exact component={AllVehiclesPage} />
+            <Route path="/make" exact component={VehicleMakePage} />
+          </Switch>
+        </Layout>
+      </div>
+    </Router>
   );
 }
 

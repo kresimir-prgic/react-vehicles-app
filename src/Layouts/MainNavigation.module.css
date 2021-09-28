@@ -1,0 +1,28 @@
+.mainHeader {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  background: #457B9D;
+}
+
+.logo {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 1.4rem;
+  align-self: center;
+  color: #1D3557;
+}
+
+.mainHeader ul {
+  list-style: none;
+}
+
+.mainHeader ul li {
+  display: inline-block;
+}
+
+.link {
+  padding: 5px 10px;
+  text-decoration: none;
+  color: #fff;
+}
