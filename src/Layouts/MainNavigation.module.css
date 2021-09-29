@@ -25,4 +25,13 @@
   padding: 5px 10px;
   text-decoration: none;
   color: #fff;
+  transition: .3s all;
+}
+
+.link:hover {
+  color: #1D3557;
+}
+
+.link.active {
+  color: #1D3557;
 }

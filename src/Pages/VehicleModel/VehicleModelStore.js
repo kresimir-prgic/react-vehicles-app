@@ -7,6 +7,7 @@ class VehicleModelStore {
   status = "initial";
   searchQuery = "";
   filter = "";
+  urlParams = "";
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
@@ -19,20 +20,24 @@ class VehicleModelStore {
       filter: observable,
       filteredVehicleModels: computed,
       filterHandler: action,
+      urlParams: observable
     })
   }
 
   getVehicleModels = async () => {
     try {
       this.isLoading = true;
-      var params = {
-        pageNumber: this.vehicleModelData.pageNumber,
-        searchQuery: this.searchQuery
-      };
-      const urlParams = new URLSearchParams(Object.entries(params));
+      // var params = {
+      //   pageNumber: this.vehicleModelData.pageNumber,
+      //   searchQuery: this.searchQuery
+      // };
+      // const urlParams = new URLSearchParams(Object.entries(params));
+      const urlParams = '';
+      // const urlParams = 'abrv=Ford';
       const data = await this.vehicleModelService.get(urlParams);
       runInAction(() => {
         this.vehicleModelData = data;
+        console.log(data);
         this.isLoading = false;
       });
     } catch (error) {

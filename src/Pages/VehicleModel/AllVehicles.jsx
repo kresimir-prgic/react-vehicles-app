@@ -9,19 +9,20 @@ import classes from './AllVehicles.module.css';
 class AllVehiclesPage extends Component {
 
   render() {
-    if(this.props.vehicleModelStore.isLoading) {
-      return (
-        <h3>Loading...</h3>
-      )
-    }
-
     return (
 			<section>
         <div className={classes['page-header']}>
-          <h1>All Vehicle Models</h1>
+          <h1>Vehicle Model Page</h1>
+          <select id="abrv" className={classes.input}>
+            <option value="">All</option>
+            <option value="BMW">BMW</option>
+            <option value="Ford">Ford</option>
+          </select>
           <input className={classes.input} type="text" placeholder="Search..." value={this.props.vehicleModelStore.filter} onChange={event => this.props.vehicleModelStore.filterHandler(event)} />
         </div>
-				<VehicleList vehicles={this.props.vehicleModelStore.filteredVehicleModels} />
+        {this.props.vehicleModelStore.isLoading && <h3>Loading...</h3>}
+        {!this.props.vehicleModelStore.isLoading && 
+				<VehicleList vehicles={this.props.vehicleModelStore.filteredVehicleModels} />}
 			</section>
 	  );
   }
