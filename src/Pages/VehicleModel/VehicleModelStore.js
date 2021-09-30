@@ -8,6 +8,8 @@ class VehicleModelStore {
   searchQuery = "";
   filter = "";
   urlParams = "";
+  selected = "";
+  formVisible = true;
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
@@ -20,7 +22,9 @@ class VehicleModelStore {
       filter: observable,
       filteredVehicleModels: computed,
       filterHandler: action,
-      urlParams: observable
+      urlParams: observable,
+      selected: observable,
+      selectHandler: action
     })
   }
 
@@ -37,7 +41,7 @@ class VehicleModelStore {
       const data = await this.vehicleModelService.get(urlParams);
       runInAction(() => {
         this.vehicleModelData = data;
-        console.log(data);
+        // console.log(data);
         this.isLoading = false;
       });
     } catch (error) {
@@ -56,6 +60,24 @@ class VehicleModelStore {
 
   filterHandler(event) {
     this.filter = event.target.value;
+  }
+
+  selectHandler = async (event) => {
+    this.selected = event.target.value;
+    this.isLoading = true;
+    if (this.selected) {
+      const data = await this.vehicleModelService.get("makeId=" + this.selected);
+      runInAction(() => {
+        this.vehicleModelData = data;
+        this.isLoading = false;
+      });
+    } else {
+      const data = await this.vehicleModelService.get();
+      runInAction(() => {
+        this.vehicleModelData = data;
+        this.isLoading = false;
+      });
+    }
   }
 
 }
