@@ -63,6 +63,7 @@ class AllVehiclesPage extends Component {
 				{!this.props.vehicleModelStore.isLoading && (
 					<VehicleList
 						vehicles={this.props.vehicleModelStore.filteredVehicleModels}
+            editModel={this.props.vehicleModelStore.editModel}
 					/>
 				)}
 			</section>

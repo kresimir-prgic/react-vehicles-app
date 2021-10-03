@@ -24,6 +24,12 @@
   border: none;
   color: #fff;
   border-radius: .5rem;
+  cursor: pointer;
+  transition: ease .5s all;
+}
+
+.formButton:hover {
+  background-color: #578fb3;
 }
 
 .valid {

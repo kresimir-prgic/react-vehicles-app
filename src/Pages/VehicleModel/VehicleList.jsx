@@ -12,6 +12,7 @@ function VehicleList(props) {
 					makeId={vehicle.makeId}
 					name={vehicle.name}
 					abrv={vehicle.abrv}
+          editModel={() => props.editModel(vehicle.id)}
 				/>
 			))}
 		</ul>

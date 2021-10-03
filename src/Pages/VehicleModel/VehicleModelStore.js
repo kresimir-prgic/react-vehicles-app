@@ -1,6 +1,9 @@
 import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import VehicleModelService from "../../Common/VehicleModelService";
 import VehicleMakeService from "../../Common/VehicleMakeService";
+import { RouterStore } from 'react-router-mobx';
+
+const routerStore = new RouterStore();
 
 class VehicleModelStore {
   isLoading = true;
@@ -41,7 +44,8 @@ class VehicleModelStore {
       changeNameHandler: action,
       addNewModel: action,
       formMessage: observable,
-      formIsValid: observable
+      formIsValid: observable,
+      editModel: action
     })
   }
 
@@ -80,6 +84,7 @@ class VehicleModelStore {
   }
 
   getFilteredList = async (selected) => {
+    this.isLoading = true;
     let params = "";
     if (selected) {
       params = "?makeId=" + selected;
@@ -124,11 +129,9 @@ class VehicleModelStore {
       abrv: this.selectedMakeAbrv,
       name: this.inputName
     };
-    console.log(model);
     if ((model.makeId && model.name) !== '') {
-      const data = await this.vehicleModelService.post(model);
+      await this.vehicleModelService.post(model);
       runInAction(() => {
-        console.log(data);
         this.formIsValid = true;
         this.formMessage = "Model is successfuly added to list. ";
         this.getFilteredList(this.selected);
@@ -137,6 +140,14 @@ class VehicleModelStore {
         this.formIsValid = false;
         this.formMessage = "All fields must be valid!";
     }
+  }
+
+  editModel(modelId) {
+    console.log(modelId);
+    const { location } = routerStore;
+    console.log(location);
+    // location.pathname = "/model/" + modelId;
+    window.location = "/model/" + modelId;
   }
 
 }
