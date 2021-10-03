@@ -10,10 +10,12 @@ class VehicleModelStore {
   filter = "";
   urlParams = "";
   selected = "";
-  formVisible = true;
+  formVisible = false;
   selectedMake = "";
   selectedMakeAbrv = "";
   inputName = "";
+  formMessage = "";
+  formIsValid = false;
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
@@ -37,7 +39,9 @@ class VehicleModelStore {
       inputName: observable,
       newFormSelectHandler: action,
       changeNameHandler: action,
-      addNewModel: action
+      addNewModel: action,
+      formMessage: observable,
+      formIsValid: observable
     })
   }
 
@@ -75,28 +79,29 @@ class VehicleModelStore {
     this.filter = event.target.value;
   }
 
+  getFilteredList = async (selected) => {
+    let params = "";
+    if (selected) {
+      params = "?makeId=" + selected;
+    }
+    const data = await this.vehicleModelService.get(params);
+    runInAction(() => {
+      this.vehicleModelData = data;
+      this.isLoading = false;
+    });
+  }
+
   selectHandler = async (event) => {
     this.selected = event.target.value;
     this.isLoading = true;
-    if (this.selected) {
-      const data = await this.vehicleModelService.get("?makeId=" + this.selected);
-      runInAction(() => {
-        this.vehicleModelData = data;
-        this.isLoading = false;
-      });
-    } else {
-      const data = await this.vehicleModelService.get("");
-      runInAction(() => {
-        this.vehicleModelData = data;
-        this.isLoading = false;
-      });
-    }
+    this.getFilteredList(this.selected);
   }
 
   newFormHandler(event) {
     event.preventDefault();
     this.formVisible = !this.formVisible;
-  } 
+    this.formMessage = "";
+  }
 
   newFormSelectHandler = async (event) => {
     this.selectedMake = event.target.value;
@@ -112,11 +117,26 @@ class VehicleModelStore {
     this.inputName = event.target.value;
   }
 
-  addNewModel(event) {
+  addNewModel = async (event) => {
     event.preventDefault();
-    console.log('ID: ' + this.selectedMake);
-    console.log('Abrv: ' + this.selectedMakeAbrv);
-    console.log('Name: ' + this.inputName);
+    let model = {
+      makeId: this.selectedMake,
+      abrv: this.selectedMakeAbrv,
+      name: this.inputName
+    };
+    console.log(model);
+    if ((model.makeId && model.name) !== '') {
+      const data = await this.vehicleModelService.post(model);
+      runInAction(() => {
+        console.log(data);
+        this.formIsValid = true;
+        this.formMessage = "Model is successfuly added to list. ";
+        this.getFilteredList(this.selected);
+      });
+    } else {
+        this.formIsValid = false;
+        this.formMessage = "All fields must be valid!";
+    }
   }
 
 }

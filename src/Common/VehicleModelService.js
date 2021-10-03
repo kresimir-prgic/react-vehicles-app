@@ -9,6 +9,20 @@ class VehicleModelService {
     const response = await fetch(request);
     return response.json();
   }
+
+  post = async (model) => {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    var options = {
+      method: "POST",
+      headers,
+      body: JSON.stringify(model)
+    }
+    const request = new Request(apiUrl, options);
+    const response = await fetch(request);
+    return response;
+  }
+
 }
 
 export default VehicleModelService;

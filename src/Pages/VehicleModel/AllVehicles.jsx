@@ -14,14 +14,14 @@ class AllVehiclesPage extends Component {
 		return (
 			<section>
 				<div>
-					Not on the list?
+					Not on the list? &nbsp;
 					<a
 						href="#0"
 						onClick={(event) =>
 							this.props.vehicleModelStore.newFormHandler(event)
 						}
 					>
-						Add new
+						{this.props.vehicleModelStore.formVisible ? 'Hide form' : 'Add new'}
 					</a>
 				</div>
 				{this.props.vehicleModelStore.formVisible && (
@@ -30,6 +30,8 @@ class AllVehiclesPage extends Component {
 						vehicleMakeData={this.props.vehicleMakeStore.vehicleMakeData}
 						changeName={event => this.props.vehicleModelStore.changeNameHandler(event)}
             onSubmit={event => this.props.vehicleModelStore.addNewModel(event)}
+            submitMessage={this.props.vehicleModelStore.formMessage}
+            isValid={this.props.vehicleModelStore.formIsValid}
 					/>
 				)}
 				<div className={classes["page-header"]}>

@@ -18,6 +18,9 @@ const VehicleModelForm = (props) => {
 				onChange={props.changeName}
 			/>
 			<button className={classes.formButton}>Add model</button>
+			<span className={props.isValid ? classes.valid : classes.notValid}>
+				{props.submitMessage}
+			</span>
 		</form>
 	);
 };
