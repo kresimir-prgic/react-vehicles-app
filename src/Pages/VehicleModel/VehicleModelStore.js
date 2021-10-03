@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import VehicleModelService from "../../Common/VehicleModelService";
+import VehicleMakeService from "../../Common/VehicleMakeService";
 
 class VehicleModelStore {
   isLoading = true;
@@ -10,9 +11,13 @@ class VehicleModelStore {
   urlParams = "";
   selected = "";
   formVisible = true;
+  selectedMake = "";
+  selectedMakeAbrv = "";
+  inputName = "";
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
+    this.vehicleMakeService = new VehicleMakeService();
     runInAction(async () => await this.getVehicleModels());
     makeObservable(this, {
       isLoading: observable,
@@ -24,7 +29,15 @@ class VehicleModelStore {
       filterHandler: action,
       urlParams: observable,
       selected: observable,
-      selectHandler: action
+      selectHandler: action,
+      formVisible: observable,
+      newFormHandler: action,
+      selectedMake: observable,
+      selectedMakeAbrv: observable,
+      inputName: observable,
+      newFormSelectHandler: action,
+      changeNameHandler: action,
+      addNewModel: action
     })
   }
 
@@ -66,18 +79,44 @@ class VehicleModelStore {
     this.selected = event.target.value;
     this.isLoading = true;
     if (this.selected) {
-      const data = await this.vehicleModelService.get("makeId=" + this.selected);
+      const data = await this.vehicleModelService.get("?makeId=" + this.selected);
       runInAction(() => {
         this.vehicleModelData = data;
         this.isLoading = false;
       });
     } else {
-      const data = await this.vehicleModelService.get();
+      const data = await this.vehicleModelService.get("");
       runInAction(() => {
         this.vehicleModelData = data;
         this.isLoading = false;
       });
     }
+  }
+
+  newFormHandler(event) {
+    event.preventDefault();
+    this.formVisible = !this.formVisible;
+  } 
+
+  newFormSelectHandler = async (event) => {
+    this.selectedMake = event.target.value;
+    if (this.selectedMake) {
+      const data = await this.vehicleMakeService.get("/" + this.selectedMake);
+      runInAction(() => {
+        this.selectedMakeAbrv = data.abrv;
+      });
+    }
+  }
+
+  changeNameHandler(event) {
+    this.inputName = event.target.value;
+  }
+
+  addNewModel(event) {
+    event.preventDefault();
+    console.log('ID: ' + this.selectedMake);
+    console.log('Abrv: ' + this.selectedMakeAbrv);
+    console.log('Name: ' + this.inputName);
   }
 
 }

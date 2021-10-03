@@ -13,11 +13,28 @@ class AllVehiclesPage extends Component {
 	render() {
 		return (
 			<section>
-        {this.props.vehicleModelStore.formVisible && <VehicleModelForm />}
+				<div>
+					Not on the list?
+					<a
+						href="#0"
+						onClick={(event) =>
+							this.props.vehicleModelStore.newFormHandler(event)
+						}
+					>
+						Add new
+					</a>
+				</div>
+				{this.props.vehicleModelStore.formVisible && (
+					<VehicleModelForm
+						selectHandler={event => this.props.vehicleModelStore.newFormSelectHandler(event)}
+						vehicleMakeData={this.props.vehicleMakeStore.vehicleMakeData}
+						changeName={event => this.props.vehicleModelStore.changeNameHandler(event)}
+            onSubmit={event => this.props.vehicleModelStore.addNewModel(event)}
+					/>
+				)}
 				<div className={classes["page-header"]}>
 					<h1>Vehicle Model List</h1>
 					<select
-						id="abrv"
 						className={classes.input}
 						onChange={(event) =>
 							this.props.vehicleModelStore.selectHandler(event)
