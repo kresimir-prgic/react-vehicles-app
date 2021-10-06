@@ -1,21 +1,22 @@
-import VehicleItem from "./VehicleItem";
-
-import classes from "./VehicleList.module.css";
+import ItemList from "../../Components/ItemList";
 
 function VehicleList(props) {
 	return (
-		<ul className={classes["vehicle-list"]}>
+		<ItemList>
 			{props.vehicles.map((vehicle) => (
-				<VehicleItem
+				<li
 					key={vehicle.id}
 					id={vehicle.id}
-					makeId={vehicle.makeId}
 					name={vehicle.name}
 					abrv={vehicle.abrv}
-          editModel={() => props.editModel(vehicle.id)}
-				/>
+					onClick={() => props.editModel(vehicle.id)}
+				>
+					<h3 title="Click to edit">
+						{vehicle.abrv} <span>{vehicle.name}</span>
+					</h3>
+				</li>
 			))}
-		</ul>
+		</ItemList>
 	);
 }
 

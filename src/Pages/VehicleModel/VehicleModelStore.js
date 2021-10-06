@@ -1,13 +1,12 @@
 import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import VehicleModelService from "../../Common/VehicleModelService";
 import VehicleMakeService from "../../Common/VehicleMakeService";
-import { RouterStore } from 'react-router-mobx';
-
-const routerStore = new RouterStore();
+import routing from "../../Stores/Routing";
 
 class VehicleModelStore {
   isLoading = true;
   vehicleModelData = [];
+  vehicleMakeData = [];
   status = "initial";
   searchQuery = "";
   filter = "";
@@ -24,11 +23,13 @@ class VehicleModelStore {
     this.vehicleModelService = new VehicleModelService();
     this.vehicleMakeService = new VehicleMakeService();
     runInAction(async () => await this.getVehicleModels());
+    runInAction(async () => await this.getVehicleBrands());
     makeObservable(this, {
       isLoading: observable,
       status: observable,
       searchQuery: observable,
       vehicleModelData: observable,
+      vehicleMakeData: observable,
       filter: observable,
       filteredVehicleModels: computed,
       filterHandler: action,
@@ -52,13 +53,7 @@ class VehicleModelStore {
   getVehicleModels = async () => {
     try {
       this.isLoading = true;
-      // var params = {
-      //   pageNumber: this.vehicleModelData.pageNumber,
-      //   searchQuery: this.searchQuery
-      // };
-      // const urlParams = new URLSearchParams(Object.entries(params));
       const urlParams = '';
-      // const urlParams = 'abrv=Ford';
       const data = await this.vehicleModelService.get(urlParams);
       runInAction(() => {
         this.vehicleModelData = data;
@@ -70,6 +65,15 @@ class VehicleModelStore {
         this.status = "error";
       })
     }
+  }
+
+  getVehicleBrands = async () => {
+    const urlParams = '';
+    const data = await this.vehicleMakeService.get(urlParams);
+    runInAction(() => {
+      this.vehicleMakeData = data;
+      // console.log(data);
+    });
   }
 
   get filteredVehicleModels() {
@@ -143,11 +147,7 @@ class VehicleModelStore {
   }
 
   editModel(modelId) {
-    console.log(modelId);
-    const { location } = routerStore;
-    console.log(location);
-    // location.pathname = "/model/" + modelId;
-    window.location = "/model/" + modelId;
+    routing.push("/model/" + modelId);
   }
 
 }

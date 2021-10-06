@@ -6,3 +6,23 @@
   margin: 0;
   padding: 0;
 }
+
+.item-list li {
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: ease .5s all;
+}
+.item-list li:hover {
+  background: #457B9D;
+}
+.item-list h3 {
+  margin: 0;
+}
+.item-list li:hover h3 span {
+  color: #000;
+}
+.item-list h3 span {
+  color: #457B9D;
+}

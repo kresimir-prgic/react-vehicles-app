@@ -23,6 +23,18 @@ class VehicleModelService {
     return response;
   }
 
+  delete = async (id) => {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    const options = {
+        method: "DELETE",
+        headers
+    }
+    const request = new Request(apiUrl + "/" + id, options);
+    const response = await fetch(request);
+    return response;
+  }
+
 }
 
 export default VehicleModelService;

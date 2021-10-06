@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
 import VehicleModelStore from "./VehicleModelStore";
-import VehicleMakeStore from "../VehicleMake/VehicleMakeStore";
 
 import VehicleList from "./VehicleList";
 import VehicleModelForm from "./VehicleModelForm";
@@ -27,7 +26,7 @@ class AllVehiclesPage extends Component {
 				{this.props.vehicleModelStore.formVisible && (
 					<VehicleModelForm
 						selectHandler={event => this.props.vehicleModelStore.newFormSelectHandler(event)}
-						vehicleMakeData={this.props.vehicleMakeStore.vehicleMakeData}
+						vehicleMakeData={this.props.vehicleModelStore.vehicleMakeData}
 						changeName={event => this.props.vehicleModelStore.changeNameHandler(event)}
             onSubmit={event => this.props.vehicleModelStore.addNewModel(event)}
             submitMessage={this.props.vehicleModelStore.formMessage}
@@ -43,7 +42,7 @@ class AllVehiclesPage extends Component {
 						}
 					>
 						<option value="">All</option>
-						{this.props.vehicleMakeStore.vehicleMakeData.map((make) => (
+						{this.props.vehicleModelStore.vehicleMakeData.map((make) => (
 							<option key={make.id} value={make.id}>
 								{make.name}
 							</option>
@@ -72,6 +71,5 @@ class AllVehiclesPage extends Component {
 }
 
 export default inject((provider) => ({
-	vehicleModelStore: new VehicleModelStore(),
-	vehicleMakeStore: new VehicleMakeStore(),
+	vehicleModelStore: new VehicleModelStore()
 }))(observer(AllVehiclesPage));

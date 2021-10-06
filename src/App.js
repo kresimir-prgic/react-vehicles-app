@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, RouterStore } from 'react-router-mobx';
+import { Router } from 'react-router-mobx';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import AllVehiclesPage from './Pages/VehicleModel/AllVehicles';
@@ -7,12 +7,11 @@ import VehicleModelEdit from './Pages/VehicleModelEdit/VehicleModelEdit';
 import VehicleMakePage from './Pages/VehicleMake/VehicleMakePage';
 import Layout from './Layouts/Layout'
 import MainNavigation from './Layouts/MainNavigation';
-
-const routerStore = new RouterStore();
+import routing from './Stores/Routing';
 
 function App() {
   return (
-    <Router component={BrowserRouter} routerStore={routerStore}>
+    <Router component={BrowserRouter} routerStore={routing}>
       <div>
         <MainNavigation />
         <Layout>
