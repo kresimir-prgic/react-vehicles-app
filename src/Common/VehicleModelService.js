@@ -23,6 +23,19 @@ class VehicleModelService {
     return response;
   }
 
+  put = async (model) => {
+    const headers = new Headers()
+    headers.append("Content-Type", "application/json");
+    var options = {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(model)
+    }
+    const request = new Request(apiUrl + "/" + model.id, options);
+    const response = await fetch(request);
+    return response;
+  }
+
   delete = async (id) => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");

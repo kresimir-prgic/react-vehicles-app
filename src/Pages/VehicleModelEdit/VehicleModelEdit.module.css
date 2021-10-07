@@ -1,0 +1,41 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 250px 250px;
+  grid-gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+  padding: .5rem 1rem;
+  margin-right: 1rem;
+  border-radius: .2rem;
+  background-color: #457b9d;
+  color: #fff;
+}
+
+.btn:hover {
+  background-color: #5489aa;
+}
+
+.btnDelete {
+  background-color: #e63946;
+  color: #fff;
+}
+
+.btnDelete:hover {
+  background-color: #ee5461;
+}
+
+.input {
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  outline: none;
+}
+
+.notValid {
+  color: red;
+}

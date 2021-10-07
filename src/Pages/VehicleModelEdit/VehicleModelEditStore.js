@@ -1,6 +1,6 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
 import VehicleModelService from "../../Common/VehicleModelService";
-// import VehicleMakeService from "../../Common/VehicleMakeService";
+import VehicleMakeService from "../../Common/VehicleMakeService";
 import routing from "../../Stores/Routing";
 
 class VehicleModelEditStore {
@@ -8,12 +8,29 @@ class VehicleModelEditStore {
   isLoading = true;
   urlParams = "";
   modelData = [];
+  selected = "";
+  makeData = [];
+  name = "";
+  abrv = "";
+  isValid = true;
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
+    this.vehicleMakeService = new VehicleMakeService();
+    runInAction(async () => await this.getVehicleBrands());
+    this.selected = 1;
     makeObservable(this, {
+      isLoading: observable,
       modelData: observable,
-      deleteModel: action
+      deleteModel: action,
+      selectHandler: action,
+      changeNameHandler: action,
+      selected: observable,
+      makeData: observable,
+      updateModel: action,
+      name: observable,
+      abrv: observable,
+      isValid: observable,
     });
   };
 
@@ -22,6 +39,20 @@ class VehicleModelEditStore {
     const data = await this.vehicleModelService.get('/' + id);
     runInAction(() => {
       this.vehicleModelData = data;
+      console.log(data);
+      this.isLoading = false;
+      this.selected = parseInt(data.makeId);
+      this.name = data.name;
+      this.abrv = data.abrv;
+    });
+  }
+
+  getVehicleBrands = async () => {
+    const urlParams = '';
+    this.isLoading = true;
+    const data = await this.vehicleMakeService.get(urlParams);
+    runInAction(() => {
+      this.makeData = data;
       console.log(data);
       this.isLoading = false;
     });
@@ -34,6 +65,39 @@ class VehicleModelEditStore {
         routing.push("/");
       });
 		}
+  }
+
+  selectHandler = async (event) => {
+    this.selected = event.target.value;
+    if (this.selected) {
+      const data = await this.vehicleMakeService.get("/" + this.selected);
+      runInAction(() => {
+        this.abrv = data.abrv;
+      });
+    }
+  }
+
+  changeNameHandler(event) {
+    this.name = event.target.value;
+  }
+
+  updateModel = async (id) => {
+    let data = {
+      id: id,
+      abrv: this.abrv,
+      name: this.name,
+      makeId: this.selected
+    }
+    console.log(data);
+    if (this.name !== '') {
+      await this.vehicleModelService.put(data);
+      runInAction(() => {
+        this.isValid = true;
+        routing.push("/");
+      });
+    } else {
+        this.isValid = false;
+    }
   }
 
 }
