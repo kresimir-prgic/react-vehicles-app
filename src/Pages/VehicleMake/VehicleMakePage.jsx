@@ -2,6 +2,7 @@ import { inject, observer } from "mobx-react";
 import React, { Component } from "react";
 import VehicleMakeStore from "./VehicleMakeStore";
 import MakeList from "./MakeList";
+import VehicleMakeForm from "./VehicleMakeForm";
 import classes from "./VehicleMakePage.module.css";
 
 class VehicleMakePage extends Component {
@@ -19,6 +20,21 @@ class VehicleMakePage extends Component {
 						{this.props.vehicleMakeStore.formVisible ? 'Hide form' : 'Add new'}
 					</a>
 				</div>
+        {this.props.vehicleMakeStore.formVisible && (
+					<VehicleMakeForm
+						changeName={(event) =>
+							this.props.vehicleMakeStore.changeNameHandler(event)
+						}
+						changeAbrv={(event) =>
+							this.props.vehicleMakeStore.changeAbrvHandler(event)
+						}
+						onSubmit={(event) =>
+							this.props.vehicleMakeStore.addNewMake(event)
+						}
+						submitMessage={this.props.vehicleMakeStore.formMessage}
+						isValid={this.props.vehicleMakeStore.formIsValid}
+					/>
+				)}
         <div className={classes["page-header"]}>
 					<h1>Vehicle Make List</h1>
 					<select
@@ -48,7 +64,7 @@ class VehicleMakePage extends Component {
 				{!this.props.vehicleMakeStore.isLoading && (
 					<MakeList
 						make={this.props.vehicleMakeStore.filteredVehicleMake}
-						// editModel={this.props.vehicleModelStore.editModel}
+						editMake={this.props.vehicleMakeStore.editMake}
 					/>
 				)}
 			</section>

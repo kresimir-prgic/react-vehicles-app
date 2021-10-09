@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-
 import VehicleModelStore from "./VehicleModelStore";
-
 import VehicleList from "./VehicleList";
 import VehicleModelForm from "./VehicleModelForm";
-
 import classes from "./AllVehicles.module.css";
 
 class AllVehiclesPage extends Component {
@@ -20,17 +17,23 @@ class AllVehiclesPage extends Component {
 							this.props.vehicleModelStore.newFormHandler(event)
 						}
 					>
-						{this.props.vehicleModelStore.formVisible ? 'Hide form' : 'Add new'}
+						{this.props.vehicleModelStore.formVisible ? "Hide form" : "Add new"}
 					</a>
 				</div>
 				{this.props.vehicleModelStore.formVisible && (
 					<VehicleModelForm
-						selectHandler={event => this.props.vehicleModelStore.newFormSelectHandler(event)}
+						selectHandler={(event) =>
+							this.props.vehicleModelStore.newFormSelectHandler(event)
+						}
 						vehicleMakeData={this.props.vehicleModelStore.vehicleMakeData}
-						changeName={event => this.props.vehicleModelStore.changeNameHandler(event)}
-            onSubmit={event => this.props.vehicleModelStore.addNewModel(event)}
-            submitMessage={this.props.vehicleModelStore.formMessage}
-            isValid={this.props.vehicleModelStore.formIsValid}
+						changeName={(event) =>
+							this.props.vehicleModelStore.changeNameHandler(event)
+						}
+						onSubmit={(event) =>
+							this.props.vehicleModelStore.addNewModel(event)
+						}
+						submitMessage={this.props.vehicleModelStore.formMessage}
+						isValid={this.props.vehicleModelStore.formIsValid}
 					/>
 				)}
 				<div className={classes["page-header"]}>
@@ -60,16 +63,19 @@ class AllVehiclesPage extends Component {
 				</div>
 				{this.props.vehicleModelStore.isLoading && <h3>Loading...</h3>}
 				{!this.props.vehicleModelStore.isLoading && (
-					<VehicleList
-						vehicles={this.props.vehicleModelStore.filteredVehicleModels}
+          <VehicleList
+            vehicles={this.props.vehicleModelStore.filteredVehicleModels}
             editModel={this.props.vehicleModelStore.editModel}
-					/>
+          />
 				)}
+        {!this.props.vehicleModelStore.isLoading && !this.props.vehicleModelStore.filteredVehicleModels.length && 
+          <h3>No results!</h3>
+        }
 			</section>
 		);
 	}
 }
 
 export default inject((provider) => ({
-	vehicleModelStore: new VehicleModelStore()
+	vehicleModelStore: new VehicleModelStore(),
 }))(observer(AllVehiclesPage));

@@ -1,0 +1,41 @@
+.formWrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+  background-color: #f1f1f1;
+  border-radius: .5rem;;
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.formWrapper > *:nth-child(4) {
+  grid-column: 1 / span 3;
+}
+
+.input {
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: .5rem;
+  outline: none;
+}
+
+.formButton {
+  background-color: #457B9D;
+  border: none;
+  color: #fff;
+  border-radius: .5rem;
+  cursor: pointer;
+  transition: ease .5s all;
+}
+
+.formButton:hover {
+  background-color: #578fb3;
+}
+
+.valid {
+  color: green;
+}
+
+.notValid {
+  color: red;
+}

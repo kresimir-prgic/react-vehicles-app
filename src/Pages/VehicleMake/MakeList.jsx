@@ -9,7 +9,7 @@ function MakeList(props) {
 					id={make.id}
 					name={make.name}
 					abrv={make.abrv}
-					// onClick={() => props.editModel(make.id)}
+					onClick={() => props.editMake(make.id)}
 				>
 					<h3 title="Click to edit">
 						{make.abrv} <span>{make.name}</span>

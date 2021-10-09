@@ -10,7 +10,6 @@ class VehicleModelStore {
   status = "initial";
   searchQuery = "";
   filter = "";
-  urlParams = "";
   selected = "";
   formVisible = false;
   selectedMake = "";
@@ -33,7 +32,6 @@ class VehicleModelStore {
       filter: observable,
       filteredVehicleModels: computed,
       filterHandler: action,
-      urlParams: observable,
       selected: observable,
       selectHandler: action,
       formVisible: observable,
@@ -46,7 +44,7 @@ class VehicleModelStore {
       addNewModel: action,
       formMessage: observable,
       formIsValid: observable,
-      editModel: action
+      editModel: action,
     })
   }
 
@@ -141,8 +139,8 @@ class VehicleModelStore {
         this.getFilteredList(this.selected);
       });
     } else {
-        this.formIsValid = false;
-        this.formMessage = "All fields must be valid!";
+      this.formIsValid = false;
+      this.formMessage = "All fields must be valid!";
     }
   }
 
