@@ -19,6 +19,7 @@ class VehicleMakeEditStore {
       isLoading: observable,
       deleteMake: action,
       changeNameHandler: action,
+      changeAbrvHandler: action,
       makeData: observable,
       updateMake: action,
       name: observable,
