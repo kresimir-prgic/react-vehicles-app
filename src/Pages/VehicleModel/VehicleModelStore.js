@@ -17,6 +17,8 @@ class VehicleModelStore {
   inputName = "";
   formMessage = "";
   formIsValid = false;
+  totalPages = 0;
+  perPage = 8;
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
@@ -45,13 +47,37 @@ class VehicleModelStore {
       formMessage: observable,
       formIsValid: observable,
       editModel: action,
+      totalPages: observable,
+      perPage: observable,
+      fetchCurrentPage: action,
     })
   }
 
   getVehicleModels = async () => {
     try {
       this.isLoading = true;
+      // const urlParams = '?_page=1&_limit=' + this.perPage;
       const urlParams = '';
+      const data = await this.vehicleModelService.get(urlParams);
+      const allData = await this.vehicleModelService.get('');
+      runInAction(() => {
+        this.totalPages = Math.ceil(allData.length/this.perPage);
+        this.vehicleModelData = data;
+        // console.log(data);
+        this.isLoading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.status = "error";
+      })
+    }
+  }
+
+  fetchCurrentPage = async (currentPage) => {
+    try {
+      this.isLoading = true;
+      const urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
+      console.log(urlParams);
       const data = await this.vehicleModelService.get(urlParams);
       runInAction(() => {
         this.vehicleModelData = data;
@@ -63,6 +89,12 @@ class VehicleModelStore {
         this.status = "error";
       })
     }
+  }
+
+  pageChangeHandler = async (data) => {
+    let currentPage = data.selected + 1;
+    console.log(currentPage);
+    // this.fetchCurrentPage(currentPage);
   }
 
   getVehicleBrands = async () => {

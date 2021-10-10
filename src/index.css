@@ -11,3 +11,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* PAGINATION */
+.pagination {
+  list-style: none;
+  margin: 2rem 0;
+  padding: 0;
+  text-align: center;
+}
+.pagination .page-item {
+  display: inline-flex;
+}
+.pagination .page-item .page-link {
+  padding: .5rem .75rem;
+  border: 1px solid #ccc;
+  border-right: none;
+  cursor: pointer;
+  user-select:none;
+}
+.pagination .page-item:last-child .page-link {
+  border-right: 1px solid #ccc;
+}
+.pagination .page-item.active .page-link {
+  background-color: #457B9D;
+  color: #fff;
+}
+.pagination .page-item.disabled .page-link {
+  background-color: #eee;
+  cursor: inherit;
+}
