@@ -15,6 +15,9 @@ class VehicleMakeStore {
   formIsValid = false;
   inputName = "";
   inputAbrv = "";
+  totalPages = 0;
+  perPage = 8;
+  currentPage = 1;
 
   constructor() {
     this.vehicleMakeService = new VehicleMakeService();
@@ -34,16 +37,23 @@ class VehicleMakeStore {
       formVisible: observable,
       formIsValid: observable,
       inputName: observable,
-      inputAbrv: observable
+      inputAbrv: observable,
+      totalPages: observable,
+      perPage: observable,
+      fetchCurrentPage: action,
+      currentPage: observable,
+      pageChangeHandler: action
     })
   }
 
   getVehicleBrands = async () => {
     try {
       this.isLoading = true;
-      const urlParams = '';
+      const urlParams = '?_page=1&_limit=' + this.perPage;
       const data = await this.vehicleMakeService.get(urlParams);
+      const allData = await this.vehicleMakeService.get('');
       runInAction(() => {
+        this.totalPages = Math.ceil(allData.length/this.perPage);
         this.vehicleMakeData = data;
         this.selectMakeData = data;
         // console.log(data);
@@ -54,6 +64,29 @@ class VehicleMakeStore {
         this.status = "error";
       })
     }
+  }
+
+  fetchCurrentPage = async (currentPage) => {
+    try {
+      this.isLoading = true;
+      const urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
+      const data = await this.vehicleMakeService.get(urlParams);
+      runInAction(() => {
+        this.vehicleMakeData = data;
+        // console.log(data);
+        this.isLoading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.status = "error";
+      })
+    }
+  }
+
+  pageChangeHandler = async (data) => {
+    this.currentPage = data.selected + 1;
+    // console.log(this.currentPage);
+    this.fetchCurrentPage(this.currentPage);
   }
 
   filterHandler(event) {

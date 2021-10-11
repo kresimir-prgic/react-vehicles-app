@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import VehicleModelStore from "./VehicleModelStore";
-import VehicleList from "./VehicleList";
+import ItemList from "../../Components/ItemList";
 import VehicleModelForm from "./VehicleModelForm";
 import classes from "./AllVehicles.module.css";
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 
 class AllVehiclesPage extends Component {
 	render() {
@@ -64,30 +64,13 @@ class AllVehiclesPage extends Component {
 				</div>
 				{this.props.vehicleModelStore.isLoading && <h3>Loading...</h3>}
 				{!this.props.vehicleModelStore.isLoading && (
-          <div>
-            <VehicleList
-              vehicles={this.props.vehicleModelStore.filteredVehicleModels}
-              editModel={this.props.vehicleModelStore.editModel}
-            />
-            <ReactPaginate 
-              pageCount={this.props.vehicleModelStore.totalPages}
-              pageRangeDisplayed={2}
-              marginPagesDisplayed={2}
-              onPageChange={this.props.vehicleModelStore.pageChangeHandler}
-              previousLabel='Prev'
-              nextLabel='Next'
-              containerClassName='pagination'
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              activeClassName="page-item active"
-              activeLinkClassName="page-link"
-              previousClassName="page-item"
-              nextClassName="page-item"
-              previousLinkClassName="page-link"
-              nextLinkClassName="page-link"
-              disabledClassName="page-item disabled"
-            />
-          </div>
+          <ItemList
+            dataSource={this.props.vehicleModelStore.filteredVehicleModels}
+            editItem={this.props.vehicleModelStore.editModel}
+            pageCount={this.props.vehicleModelStore.totalPages}
+            onPageChange={this.props.vehicleModelStore.pageChangeHandler}
+            forcePage={this.props.vehicleModelStore.currentPage - 1}
+          />
 				)}
         {!this.props.vehicleModelStore.isLoading && !this.props.vehicleModelStore.filteredVehicleModels.length && 
           <h3>No results!</h3>

@@ -1,7 +1,7 @@
 import { inject, observer } from "mobx-react";
 import React, { Component } from "react";
 import VehicleMakeStore from "./VehicleMakeStore";
-import MakeList from "./MakeList";
+import ItemList from "../../Components/ItemList";
 import VehicleMakeForm from "./VehicleMakeForm";
 import classes from "./VehicleMakePage.module.css";
 
@@ -62,9 +62,12 @@ class VehicleMakePage extends Component {
 				</div>
 				{this.props.vehicleMakeStore.isLoading && <h3>Loading...</h3>}
 				{!this.props.vehicleMakeStore.isLoading && (
-					<MakeList
-						make={this.props.vehicleMakeStore.filteredVehicleMake}
-						editMake={this.props.vehicleMakeStore.editMake}
+					<ItemList
+						dataSource={this.props.vehicleMakeStore.filteredVehicleMake}
+						editItem={this.props.vehicleMakeStore.editMake}
+            pageCount={this.props.vehicleMakeStore.totalPages}
+            onPageChange={this.props.vehicleMakeStore.pageChangeHandler}
+            forcePage={this.props.vehicleMakeStore.currentPage - 1}
 					/>
 				)}
 			</section>

@@ -19,6 +19,7 @@ class VehicleModelStore {
   formIsValid = false;
   totalPages = 0;
   perPage = 8;
+  currentPage = 1;
 
   constructor() {
     this.vehicleModelService = new VehicleModelService();
@@ -50,14 +51,15 @@ class VehicleModelStore {
       totalPages: observable,
       perPage: observable,
       fetchCurrentPage: action,
+      currentPage: observable,
+      pageChangeHandler: action
     })
   }
 
   getVehicleModels = async () => {
     try {
       this.isLoading = true;
-      // const urlParams = '?_page=1&_limit=' + this.perPage;
-      const urlParams = '';
+      const urlParams = '?_page=1&_limit=' + this.perPage;
       const data = await this.vehicleModelService.get(urlParams);
       const allData = await this.vehicleModelService.get('');
       runInAction(() => {
@@ -73,11 +75,17 @@ class VehicleModelStore {
     }
   }
 
+  get filteredVehicleModels() {
+    var matchesFilter = new RegExp(this.filter, "i");
+    return this.vehicleModelData.filter(vehicle => {
+      return matchesFilter.test(vehicle.abrv) || matchesFilter.test(vehicle.name)
+    });
+  }
+
   fetchCurrentPage = async (currentPage) => {
     try {
       this.isLoading = true;
       const urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
-      console.log(urlParams);
       const data = await this.vehicleModelService.get(urlParams);
       runInAction(() => {
         this.vehicleModelData = data;
@@ -92,9 +100,9 @@ class VehicleModelStore {
   }
 
   pageChangeHandler = async (data) => {
-    let currentPage = data.selected + 1;
-    console.log(currentPage);
-    // this.fetchCurrentPage(currentPage);
+    this.currentPage = data.selected + 1;
+    // console.log(this.currentPage);
+    this.fetchCurrentPage(this.currentPage);
   }
 
   getVehicleBrands = async () => {
@@ -106,13 +114,6 @@ class VehicleModelStore {
     });
   }
 
-  get filteredVehicleModels() {
-    var matchesFilter = new RegExp(this.filter, "i");
-    return this.vehicleModelData.filter(vehicle => {
-      return matchesFilter.test(vehicle.abrv) || matchesFilter.test(vehicle.name)
-    });
-  }
-
   filterHandler(event) {
     this.filter = event.target.value;
   }
@@ -121,7 +122,7 @@ class VehicleModelStore {
     this.isLoading = true;
     let params = "";
     if (selected) {
-      params = "?makeId=" + selected;
+      params = '?makeId=' + selected;
     }
     const data = await this.vehicleModelService.get(params);
     runInAction(() => {
