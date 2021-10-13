@@ -38,12 +38,12 @@ class VehicleModelEditStore {
     this.isLoading = true;
     const data = await this.vehicleModelService.get('/' + id);
     runInAction(() => {
-      this.vehicleModelData = data;
+      this.vehicleModelData = data.data;
       console.log(data);
       this.isLoading = false;
-      this.selected = parseInt(data.makeId);
-      this.name = data.name;
-      this.abrv = data.abrv;
+      this.selected = parseInt(data.data.makeId);
+      this.name = data.data.name;
+      this.abrv = data.data.abrv;
     });
   }
 
