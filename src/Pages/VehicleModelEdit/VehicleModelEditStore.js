@@ -52,7 +52,7 @@ class VehicleModelEditStore {
     this.isLoading = true;
     const data = await this.vehicleMakeService.get(urlParams);
     runInAction(() => {
-      this.makeData = data;
+      this.makeData = data.data;
       console.log(data);
       this.isLoading = false;
     });
@@ -72,7 +72,7 @@ class VehicleModelEditStore {
     if (this.selected) {
       const data = await this.vehicleMakeService.get("/" + this.selected);
       runInAction(() => {
-        this.abrv = data.abrv;
+        this.abrv = data.data.abrv;
       });
     }
   }

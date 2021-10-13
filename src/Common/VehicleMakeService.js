@@ -7,7 +7,11 @@ class VehicleModelService {
     }
     const request = new Request(apiUrl + urlParams, options);
     const response = await fetch(request);
-    return response.json();
+    const res = {
+      data: await response.json(),
+      totalCount: Number(response.headers.get('X-Total-Count'))
+    }
+    return res;
   }
 
   post = async (model) => {

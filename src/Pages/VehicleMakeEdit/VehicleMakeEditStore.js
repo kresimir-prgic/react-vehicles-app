@@ -13,7 +13,6 @@ class VehicleMakeEditStore {
 
   constructor() {
     this.vehicleMakeService = new VehicleMakeService();
-    runInAction(async () => await this.getVehicleBrands());
     this.selected = 1;
     makeObservable(this, {
       isLoading: observable,
@@ -32,22 +31,11 @@ class VehicleMakeEditStore {
     this.isLoading = true;
     const data = await this.vehicleMakeService.get('/' + id);
     runInAction(() => {
-      this.vehicleMakeData = data;
+      this.vehicleMakeData = data.data;
       // console.log(data);
       this.isLoading = false;
-      this.name = data.name;
-      this.abrv = data.abrv;
-    });
-  }
-
-  getVehicleBrands = async () => {
-    const urlParams = '';
-    this.isLoading = true;
-    const data = await this.vehicleMakeService.get(urlParams);
-    runInAction(() => {
-      this.makeData = data;
-      // console.log(data);
-      this.isLoading = false;
+      this.name = data.data.name;
+      this.abrv = data.data.abrv;
     });
   }
 

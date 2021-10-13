@@ -16,7 +16,7 @@ class VehicleMakeStore {
   inputName = "";
   inputAbrv = "";
   totalPages = 0;
-  perPage = 8;
+  perPage = 4;
   currentPage = 1;
 
   constructor() {
@@ -53,9 +53,9 @@ class VehicleMakeStore {
       const data = await this.vehicleMakeService.get(urlParams);
       const allData = await this.vehicleMakeService.get('');
       runInAction(() => {
-        this.totalPages = Math.ceil(allData.length/this.perPage);
-        this.vehicleMakeData = data;
-        this.selectMakeData = data;
+        this.totalPages = Math.ceil(data.totalCount/this.perPage);
+        this.vehicleMakeData = data.data;
+        this.selectMakeData = allData.data;
         // console.log(data);
         this.isLoading = false;
       });
@@ -69,10 +69,14 @@ class VehicleMakeStore {
   fetchCurrentPage = async (currentPage) => {
     try {
       this.isLoading = true;
-      const urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
-      const data = await this.vehicleMakeService.get(urlParams);
+      this.urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
+      if (this.selected) {
+        this.urlParams = '?id=' + this.selected + '&_page=' + currentPage + '&_limit=' + this.perPage;
+      }
+      const data = await this.vehicleMakeService.get(this.urlParams);
       runInAction(() => {
-        this.vehicleMakeData = data;
+        this.vehicleMakeData = data.data;
+        this.totalPages = Math.ceil(data.totalCount/this.perPage);
         // console.log(data);
         this.isLoading = false;
       });
@@ -100,23 +104,25 @@ class VehicleMakeStore {
     });
   }
 
-  getFilteredList = async (selected) => {
-    this.isLoading = true;
-    let params = "";
-    if (selected) {
-      params = "?id=" + selected;
-    }
-    const data = await this.vehicleMakeService.get(params);
-    runInAction(() => {
-      this.vehicleMakeData = data;
-      this.isLoading = false;
-    });
-  }
+  // getFilteredList = async (selected) => {
+  //   this.isLoading = true;
+  //   let params = "";
+  //   if (selected) {
+  //     params = "?id=" + selected;
+  //   }
+  //   const data = await this.vehicleMakeService.get(params);
+  //   runInAction(() => {
+  //     this.vehicleMakeData = data.data;
+  //     this.totalPages = Math.ceil(data.totalCount/this.perPage);
+  //     this.isLoading = false;
+  //   });
+  // }
 
   selectHandler = async (event) => {
     this.selected = event.target.value;
     this.isLoading = true;
-    this.getFilteredList(this.selected);
+    this.currentPage = 1;
+    this.fetchCurrentPage(this.currentPage);
   }
 
   newFormHandler(event) {
@@ -144,7 +150,7 @@ class VehicleMakeStore {
       runInAction(() => {
         this.formIsValid = true;
         this.formMessage = "Make is successfuly added to list. ";
-        this.getFilteredList(this.selected);
+        this.getVehicleBrands();
       });
     } else {
       this.formIsValid = false;

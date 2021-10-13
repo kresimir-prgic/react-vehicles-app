@@ -63,10 +63,20 @@ class VehicleModelStore {
       this.isLoading = true;
       const urlParams = '?_page=1&_limit=' + this.perPage;
       const data = await this.vehicleModelService.get(urlParams);
+      // const makes = await this.vehicleMakeService.get('');
       runInAction(() => {
         this.totalPages = Math.ceil(data.totalCount/this.perPage);
         this.vehicleModelData = data.data;
+        // data.data.map((model) => (
+        //   this.vehicleModelData.push({
+        //     abrv: model.abrv,
+        //     id: model.id,
+        //     makeId: model.makeId,
+        //     name: model.name
+        //   })
+        // ));
         console.log(data);
+        // console.log(makes);
         this.isLoading = false;
       });
     } catch (error) {
@@ -114,7 +124,7 @@ class VehicleModelStore {
     const urlParams = '';
     const data = await this.vehicleMakeService.get(urlParams);
     runInAction(() => {
-      this.vehicleMakeData = data;
+      this.vehicleMakeData = data.data;
       // console.log(data);
     });
   }
