@@ -7,6 +7,7 @@ class VehicleModelStore {
   isLoading = true;
   vehicleModelData = [];
   vehicleMakeData = [];
+  urlParams = "";
   status = "initial";
   searchQuery = "";
   filter = "";
@@ -32,6 +33,7 @@ class VehicleModelStore {
       searchQuery: observable,
       vehicleModelData: observable,
       vehicleMakeData: observable,
+      urlParams: observable,
       filter: observable,
       filteredVehicleModels: computed,
       filterHandler: action,
@@ -61,11 +63,10 @@ class VehicleModelStore {
       this.isLoading = true;
       const urlParams = '?_page=1&_limit=' + this.perPage;
       const data = await this.vehicleModelService.get(urlParams);
-      const allData = await this.vehicleModelService.get('');
       runInAction(() => {
-        this.totalPages = Math.ceil(allData.length/this.perPage);
-        this.vehicleModelData = data;
-        // console.log(data);
+        this.totalPages = Math.ceil(data.totalCount/this.perPage);
+        this.vehicleModelData = data.data;
+        console.log(data);
         this.isLoading = false;
       });
     } catch (error) {
@@ -85,10 +86,14 @@ class VehicleModelStore {
   fetchCurrentPage = async (currentPage) => {
     try {
       this.isLoading = true;
-      const urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
-      const data = await this.vehicleModelService.get(urlParams);
+      this.urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
+      if (this.selected) {
+        this.urlParams = '?makeId=' + this.selected + '&_page=' + currentPage + '&_limit=' + this.perPage;
+      }
+      const data = await this.vehicleModelService.get(this.urlParams);
       runInAction(() => {
-        this.vehicleModelData = data;
+        this.vehicleModelData = data.data;
+        this.totalPages = Math.ceil(data.totalCount/this.perPage);
         // console.log(data);
         this.isLoading = false;
       });
@@ -118,23 +123,11 @@ class VehicleModelStore {
     this.filter = event.target.value;
   }
 
-  getFilteredList = async (selected) => {
-    this.isLoading = true;
-    let params = "";
-    if (selected) {
-      params = '?makeId=' + selected;
-    }
-    const data = await this.vehicleModelService.get(params);
-    runInAction(() => {
-      this.vehicleModelData = data;
-      this.isLoading = false;
-    });
-  }
-
   selectHandler = async (event) => {
     this.selected = event.target.value;
     this.isLoading = true;
-    this.getFilteredList(this.selected);
+    this.currentPage = 1;
+    this.fetchCurrentPage(this.currentPage);
   }
 
   newFormHandler(event) {
@@ -169,7 +162,7 @@ class VehicleModelStore {
       runInAction(() => {
         this.formIsValid = true;
         this.formMessage = "Model is successfuly added to list. ";
-        this.getFilteredList(this.selected);
+        this.fetchCurrentPage(this.currentPage);
       });
     } else {
       this.formIsValid = false;

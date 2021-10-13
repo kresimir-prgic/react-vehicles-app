@@ -72,9 +72,6 @@ class AllVehiclesPage extends Component {
             forcePage={this.props.vehicleModelStore.currentPage - 1}
           />
 				)}
-        {!this.props.vehicleModelStore.isLoading && !this.props.vehicleModelStore.filteredVehicleModels.length && 
-          <h3>No results!</h3>
-        }
 			</section>
 		);
 	}

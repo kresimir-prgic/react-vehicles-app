@@ -19,6 +19,9 @@ function ItemList(props) {
           </li>
         ))}
       </ul>
+      {!props.dataSource.length && (
+        <h3>No results!</h3>
+      )}
       {props.pageCount > 1 && (
         <ReactPaginate 
           pageCount={props.pageCount}
