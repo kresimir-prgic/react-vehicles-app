@@ -40,7 +40,6 @@ class VehicleMakeStore {
       inputAbrv: observable,
       totalPages: observable,
       perPage: observable,
-      fetchCurrentPage: action,
       currentPage: observable,
       pageChangeHandler: action
     })
@@ -49,8 +48,11 @@ class VehicleMakeStore {
   getVehicleBrands = async () => {
     try {
       this.isLoading = true;
-      const urlParams = '?_page=1&_limit=' + this.perPage;
-      const data = await this.vehicleMakeService.get(urlParams);
+      this.urlParams = '?_page=' + this.currentPage + '&_limit=' + this.perPage;
+      if (this.selected) {
+        this.urlParams = '?id=' + this.selected + '&_page=' + this.currentPage + '&_limit=' + this.perPage;
+      }
+      const data = await this.vehicleMakeService.get(this.urlParams);
       const allData = await this.vehicleMakeService.get('');
       runInAction(() => {
         this.totalPages = Math.ceil(data.totalCount/this.perPage);
@@ -66,31 +68,9 @@ class VehicleMakeStore {
     }
   }
 
-  fetchCurrentPage = async (currentPage) => {
-    try {
-      this.isLoading = true;
-      this.urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
-      if (this.selected) {
-        this.urlParams = '?id=' + this.selected + '&_page=' + currentPage + '&_limit=' + this.perPage;
-      }
-      const data = await this.vehicleMakeService.get(this.urlParams);
-      runInAction(() => {
-        this.vehicleMakeData = data.data;
-        this.totalPages = Math.ceil(data.totalCount/this.perPage);
-        // console.log(data);
-        this.isLoading = false;
-      });
-    } catch (error) {
-      runInAction(() => {
-        this.status = "error";
-      })
-    }
-  }
-
   pageChangeHandler = async (data) => {
     this.currentPage = data.selected + 1;
-    // console.log(this.currentPage);
-    this.fetchCurrentPage(this.currentPage);
+    this.getVehicleBrands();
   }
 
   filterHandler(event) {
@@ -104,25 +84,11 @@ class VehicleMakeStore {
     });
   }
 
-  // getFilteredList = async (selected) => {
-  //   this.isLoading = true;
-  //   let params = "";
-  //   if (selected) {
-  //     params = "?id=" + selected;
-  //   }
-  //   const data = await this.vehicleMakeService.get(params);
-  //   runInAction(() => {
-  //     this.vehicleMakeData = data.data;
-  //     this.totalPages = Math.ceil(data.totalCount/this.perPage);
-  //     this.isLoading = false;
-  //   });
-  // }
-
   selectHandler = async (event) => {
     this.selected = event.target.value;
     this.isLoading = true;
     this.currentPage = 1;
-    this.fetchCurrentPage(this.currentPage);
+    this.getVehicleBrands();
   }
 
   newFormHandler(event) {

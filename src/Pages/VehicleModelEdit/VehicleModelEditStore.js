@@ -39,7 +39,7 @@ class VehicleModelEditStore {
     const data = await this.vehicleModelService.get('/' + id);
     runInAction(() => {
       this.vehicleModelData = data.data;
-      console.log(data);
+      // console.log(data);
       this.isLoading = false;
       this.selected = parseInt(data.data.makeId);
       this.name = data.data.name;
@@ -53,7 +53,7 @@ class VehicleModelEditStore {
     const data = await this.vehicleMakeService.get(urlParams);
     runInAction(() => {
       this.makeData = data.data;
-      console.log(data);
+      // console.log(data);
       this.isLoading = false;
     });
   }
@@ -88,7 +88,7 @@ class VehicleModelEditStore {
       name: this.name,
       makeId: this.selected
     }
-    console.log(data);
+    // console.log(data);
     if (this.name !== '') {
       await this.vehicleModelService.put(data);
       runInAction(() => {

@@ -1,5 +1,7 @@
-import classes from './ItemList.module.css';
+import { inject, observer } from 'mobx-react';
 import ReactPaginate from 'react-paginate';
+import ItemListStore from './ItemListStore';
+import classes from './ItemList.module.css';
 
 function ItemList(props) {
 	return (
@@ -47,4 +49,6 @@ function ItemList(props) {
 	);
 }
 
-export default ItemList;
+export default inject((provider) => ({
+	itemListStore: new ItemListStore(),
+}))(observer(ItemList));

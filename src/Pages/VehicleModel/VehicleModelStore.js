@@ -52,7 +52,6 @@ class VehicleModelStore {
       editModel: action,
       totalPages: observable,
       perPage: observable,
-      fetchCurrentPage: action,
       currentPage: observable,
       pageChangeHandler: action
     })
@@ -61,22 +60,15 @@ class VehicleModelStore {
   getVehicleModels = async () => {
     try {
       this.isLoading = true;
-      const urlParams = '?_page=1&_limit=' + this.perPage;
-      const data = await this.vehicleModelService.get(urlParams);
-      // const makes = await this.vehicleMakeService.get('');
+      this.urlParams = '?_page=' + this.currentPage + '&_limit=' + this.perPage;
+      if (this.selected) {
+        this.urlParams = '?makeId=' + this.selected + '&_page=' + this.currentPage + '&_limit=' + this.perPage;
+      }
+      const data = await this.vehicleModelService.get(this.urlParams);
       runInAction(() => {
         this.totalPages = Math.ceil(data.totalCount/this.perPage);
         this.vehicleModelData = data.data;
-        // data.data.map((model) => (
-        //   this.vehicleModelData.push({
-        //     abrv: model.abrv,
-        //     id: model.id,
-        //     makeId: model.makeId,
-        //     name: model.name
-        //   })
-        // ));
-        console.log(data);
-        // console.log(makes);
+        // console.log(data);
         this.isLoading = false;
       });
     } catch (error) {
@@ -93,31 +85,9 @@ class VehicleModelStore {
     });
   }
 
-  fetchCurrentPage = async (currentPage) => {
-    try {
-      this.isLoading = true;
-      this.urlParams = '?_page=' + currentPage + '&_limit=' + this.perPage;
-      if (this.selected) {
-        this.urlParams = '?makeId=' + this.selected + '&_page=' + currentPage + '&_limit=' + this.perPage;
-      }
-      const data = await this.vehicleModelService.get(this.urlParams);
-      runInAction(() => {
-        this.vehicleModelData = data.data;
-        this.totalPages = Math.ceil(data.totalCount/this.perPage);
-        // console.log(data);
-        this.isLoading = false;
-      });
-    } catch (error) {
-      runInAction(() => {
-        this.status = "error";
-      })
-    }
-  }
-
   pageChangeHandler = async (data) => {
     this.currentPage = data.selected + 1;
-    // console.log(this.currentPage);
-    this.fetchCurrentPage(this.currentPage);
+    this.getVehicleModels();
   }
 
   getVehicleBrands = async () => {
@@ -125,7 +95,6 @@ class VehicleModelStore {
     const data = await this.vehicleMakeService.get(urlParams);
     runInAction(() => {
       this.vehicleMakeData = data.data;
-      // console.log(data);
     });
   }
 
@@ -137,7 +106,7 @@ class VehicleModelStore {
     this.selected = event.target.value;
     this.isLoading = true;
     this.currentPage = 1;
-    this.fetchCurrentPage(this.currentPage);
+    this.getVehicleModels();
   }
 
   newFormHandler(event) {
@@ -151,7 +120,7 @@ class VehicleModelStore {
     if (this.selectedMake) {
       const data = await this.vehicleMakeService.get("/" + this.selectedMake);
       runInAction(() => {
-        this.selectedMakeAbrv = data.abrv;
+        this.selectedMakeAbrv = data.data.abrv;
       });
     }
   }
@@ -172,7 +141,7 @@ class VehicleModelStore {
       runInAction(() => {
         this.formIsValid = true;
         this.formMessage = "Model is successfuly added to list. ";
-        this.fetchCurrentPage(this.currentPage);
+        this.getVehicleModels();
       });
     } else {
       this.formIsValid = false;
